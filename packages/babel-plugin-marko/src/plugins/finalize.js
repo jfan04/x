@@ -105,6 +105,7 @@ export const visitor = {
     ]);
 
     if (meta.component) {
+      hub.isImplicit = false;
       metaObject.properties.push(
         t.objectProperty(
           t.identifier("component"),

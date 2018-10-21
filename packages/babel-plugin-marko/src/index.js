@@ -3,6 +3,7 @@ import { parse } from "./parser";
 import { visitor as transform } from "./plugins/transform";
 import { visitor as translate } from "./plugins/translate";
 import { visitor as finalize } from "./plugins/finalize";
+import createDependencyImports from "./util/create-dependency-imports";
 
 export default (api, options) => {
   const isProduction = api.env("production");
@@ -18,6 +19,15 @@ export default (api, options) => {
       const nodePath = hub.createNodePath();
       nodePath.traverse(transform);
       nodePath.traverse(translate);
+
+      if (options.dependenciesOnly) {
+        const imports = createDependencyImports(nodePath);
+        if (imports) {
+          ast.program.body = imports;
+          return ast;
+        }
+      }
+
       nodePath.traverse(finalize);
       return ast;
     }

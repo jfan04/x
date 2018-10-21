@@ -18,6 +18,7 @@ export default function(path) {
   }
 
   const classBody = hub.parseExpression(code, start).body.body;
+  hub.isImplicit = false;
   hub._componentClass = t.objectExpression(
     classBody.map(prop => {
       if (t.isClassMethod(prop)) {
